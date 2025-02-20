@@ -1,0 +1,28 @@
+.header {
+  background: #87CDEA;
+  color: rgb(180, 55, 55);
+  padding: 15px 0;
+  box-shadow: 0 6px 5px -1px rgba(0, 0, 0, 0.2);
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  &__logo {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+
+    &:hover {
+      color: #f8f9fa;
+    }
+  }
+
+}
