@@ -3,13 +3,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Events } from '@/core/interfaces/API-events-interface';
 import { EventsService } from '@/core/services/events.service';
 import { HttpClient } from '@angular/common/http';
-import { catchError, throwError } from 'rxjs';
+import { catchError, firstValueFrom, throwError } from 'rxjs';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-eventbooking',
+  selector: 'eventbooking',
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule
   ],
   templateUrl: './eventbooking.component.html',
   styleUrls: ['./eventbooking.component.scss']
@@ -21,7 +23,7 @@ export default class EventbookingComponent implements OnInit {
 
   jsonURL = '/assets/data/events.json';
 
-  constructor(public eventService: EventsService) { }
+  constructor(public eventService: EventsService, private router: Router) { }
 
   ngOnInit(): void {
 
@@ -38,13 +40,25 @@ export default class EventbookingComponent implements OnInit {
     ).subscribe({
       next: (events: Events[]) => {
         console.log("Evento data", events);
-       // Ordenar los eventos por endDate
+       // Ordenar los eventos por fecha de finalización
       this.events = events.sort((a, b) => parseInt(a.endDate) - parseInt(b.endDate));
       },
       error: (error) => {
         console.error('Error en la suscripción:', error);
       }
     });
+  }
+
+  async getEventInfo(eventId: string): Promise<void> {
+    try {
+       // Convierte el observable devuelto por getEventInfo en una promesa y espera su primer valor
+      const eventInfo = await firstValueFrom(this.eventService.getEventInfo(eventId));
+      console.log("Event Info", eventInfo);
+      // Navega a la ruta '/eventinfo' con el ID del evento y pasa la información del evento en el estado
+      this.router.navigate(['/eventinfo', eventId], { state: { eventInfo } });
+    } catch (error) {
+      console.error('Error fetching event info:', error);
+    }
   }
 
 }

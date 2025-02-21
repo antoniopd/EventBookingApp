@@ -1,0 +1,104 @@
+p {
+  margin: 0;
+}
+.event-info__container {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+
+  @media (max-width: 768px) {
+   flex-direction: column;
+  }
+
+}
+
+.event-info__box {
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.event-title {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.event-info__details ul,
+.event-info__summary ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.session-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.session-info {
+  display: flex;
+  align-items: center;
+}
+
+.session-date,
+.session-availability {
+  margin-right: 30px;
+}
+
+.session-counter {
+  display: flex;
+  align-items: center;
+}
+
+.session-counter button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  // padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  // margin-left: 5px;
+}
+
+.session-counter span {
+  margin: 0 10px;
+}
+
+.event-info__summary {
+  width: 300px;
+}
+
+.event-info__summary li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.event-info__summary img {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.summary-item-quantity{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.back-button {
+  color: #257395;
+  cursor: pointer;
+}
+
+.summary-header{
+  display: flex;
+  justify-content: space-between;
+}
+
+.event-title {
+  margin: 0 0 10px 0;
+}
