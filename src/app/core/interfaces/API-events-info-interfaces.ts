@@ -13,5 +13,5 @@ export interface Event {
 export interface Session {
   date:         string;
   availability: string;
-  quantity?: number; 
+  quantity?: number;
 }

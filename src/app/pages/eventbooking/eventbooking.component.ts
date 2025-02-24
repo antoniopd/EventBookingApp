@@ -5,6 +5,7 @@ import { EventsService } from '@/core/services/events.service';
 import { HttpClient } from '@angular/common/http';
 import { catchError, firstValueFrom, throwError } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'eventbooking',
@@ -57,6 +58,12 @@ export default class EventbookingComponent implements OnInit {
       // Navega a la ruta '/eventinfo' con el ID del evento y pasa la información del evento en el estado
       this.router.navigate(['/eventinfo', eventId], { state: { eventInfo } });
     } catch (error) {
+      // Muestra un mensaje de error si no se puede obtener la información del evento
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "¡INFORMACIÓN DEL EVENTO NO ENCONTRADA!",
+      });
       console.error('Error fetching event info:', error);
     }
   }

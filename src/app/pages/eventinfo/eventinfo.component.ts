@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { EventsInfo, Session } from '../../core/interfaces/API-events-info-interfaces';
 import { CommonModule } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'eventinfo',
@@ -18,26 +20,41 @@ export class EventInfoComponent implements OnInit {
 
   eventsInfo: EventsInfo[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private route: ActivatedRoute,
+               private router: Router,
+               @Inject(PLATFORM_ID) private platformId: object
+              ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const eventId = params.get('id');
-      const savedEventsInfo = sessionStorage.getItem('eventsInfo');
-      if (savedEventsInfo) {
-        this.eventsInfo = JSON.parse(savedEventsInfo);
-      }
-      if (window.history.state && window.history.state.eventInfo) {
-        this.addEventInfo(window.history.state.eventInfo);
-      } else if (!savedEventsInfo) {
-        console.error('Event info not passed in state');
-        this.router.navigate(['/error']);
-      }
-    });
+
+    /**
+ * Comprueba si el código se está ejecutando en el navegador antes de acceder a sessionStorage.
+ * Esto previene errores en entornos donde sessionStorage no está disponible, como en SSR (Server-Side Rendering).
+ */
+    if (isPlatformBrowser(this.platformId)) {
+
+      this.route.paramMap.subscribe(params => {
+        const eventId = params.get('id');
+        const savedEventsInfo = sessionStorage.getItem('eventsInfo');
+        if (savedEventsInfo) {
+          this.eventsInfo = JSON.parse(savedEventsInfo);
+        }
+        if (window.history.state && window.history.state.eventInfo) {
+          this.addEventInfo(window.history.state.eventInfo);
+        } else if (!savedEventsInfo) {
+          console.error('Event info not passed in state');
+          this.router.navigate(['/error']);
+        }
+      });
+    }
   }
 
   // Agrega la información del evento a la lista de eventos y guarda los cambios
   addEventInfo(eventInfo: EventsInfo): void {
+
+    // Ordenar las sesiones por fecha ascendente
+    eventInfo.sessions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
     const existingEvent = this.eventsInfo.find(e => e.event.id === eventInfo.event.id);
     if (!existingEvent) {
       this.eventsInfo.push(eventInfo);
@@ -79,10 +96,16 @@ export class EventInfoComponent implements OnInit {
   resetSession(session: Session): void {
     session.quantity = 0;
     this.saveEventsInfo();
+
   }
 
   // Navega de vuelta a la página principal
   goBack(): void {
     this.router.navigate(['/']);
+  }
+
+  // Verifica si hay sesiones con cantidad
+  hasSessionsWithQuantity(eventInfo: any): boolean {
+    return eventInfo.sessions.some((session: any) => session.quantity && session.quantity > 0);
   }
 }
