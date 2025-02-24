@@ -1,0 +1,34 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+app-header {
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  top: 0;
+}
+
+.content-container {
+  margin: 80px auto 0 auto;
+  flex: 1;
+  padding: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row;
+}
+  @media (max-width: 768px) {
+    .content-container {
+      justify-content: center;
+    }
+
+router-outlet {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+}
+}
